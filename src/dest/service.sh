@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 #
-# Service.sh for python2
+# Service.sh for python3
 
 # import DroboApps framework functions
 . /etc/service.subr
