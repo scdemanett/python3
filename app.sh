@@ -1,9 +1,9 @@
 ### ZLIB ###
 _build_zlib() {
-local VERSION="1.2.8"
+local VERSION="1.2.11"
 local FOLDER="zlib-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
-local URL="http://zlib.net/${FILE}"
+local URL="https://www.zlib.net/${FILE}"
 
 _download_tgz "${FILE}" "${URL}" "${FOLDER}"
 pushd "target/${FOLDER}"
@@ -32,10 +32,10 @@ popd
 
 ### OPENSSL ###
 _build_openssl() {
-local VERSION="1.0.2d"
+local VERSION="1.0.2n"
 local FOLDER="openssl-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
-local URL="http://mirror.switch.ch/ftp/mirror/openssl/source/${FILE}"
+local URL="https://www.openssl.org/source/${FILE}"
 
 _download_tgz "${FILE}" "${URL}" "${FOLDER}"
 cp -vf "src/${FOLDER}-parallel-build.patch" "target/${FOLDER}/"
@@ -74,29 +74,14 @@ popd
 
 ### SQLITE ###
 _build_sqlite() {
-local VERSION="3081101"
+local VERSION="3210000"
 local FOLDER="sqlite-autoconf-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
-local URL="http://sqlite.org/2015/${FILE}"
+local URL="https://www.sqlite.org/2017/${FILE}"
 
 _download_tgz "${FILE}" "${URL}" "${FOLDER}"
 pushd "target/${FOLDER}"
 ./configure --host="${HOST}" --prefix="${DEPS}" --libdir="${DEST}/lib" --disable-static
-make
-make install
-popd
-}
-
-### BDB ###
-_build_bdb() {
-local VERSION="5.3.28"
-local FOLDER="db-${VERSION}"
-local FILE="${FOLDER}.tar.gz"
-local URL="http://download.oracle.com/berkeley-db/${FILE}"
-
-_download_tgz "${FILE}" "${URL}" "${FOLDER}"
-pushd "target/${FOLDER}/build_unix"
-../dist/configure --host="${HOST}" --prefix="${DEPS}" --libdir="${DEST}/lib" --disable-static --enable-compat185 --enable-dbm
 make
 make install
 popd
@@ -121,12 +106,12 @@ popd
 
 ### EXPAT ###
 _build_expat() {
-local VERSION="2.1.0"
+local VERSION="2.2.5"
 local FOLDER="expat-${VERSION}"
-local FILE="${FOLDER}.tar.gz"
-local URL="http://sourceforge.net/projects/expat/files/expat/${VERSION}/${FILE}"
+local FILE="${FOLDER}.tar.bz2"
+local URL="https://github.com/libexpat/libexpat/releases/download/R_2_2_5/${FILE}"
 
-_download_tgz "${FILE}" "${URL}" "${FOLDER}"
+_download_bz2 "${FILE}" "${URL}" "${FOLDER}"
 pushd "target/${FOLDER}"
 ./configure --host="${HOST}" --prefix="${DEPS}" --libdir="${DEST}/lib" --disable-static
 make
@@ -136,7 +121,7 @@ popd
 
 ### PYTHON3 ###
 _build_python() {
-local VERSION="3.4.3"
+local VERSION="3.5.4"
 local FOLDER="Python-${VERSION}"
 local FILE="${FOLDER}.tgz"
 local URL="https://www.python.org/ftp/python/${VERSION}/${FILE}"
@@ -154,13 +139,13 @@ cp -avR "target/${FOLDER}" "target/${FOLDER}-native"
 
 pushd "target/${FOLDER}"
 export _PYTHON_HOST_PLATFORM="linux-armv7l"
-./configure --host="${HOST}" --build="$(uname -p)" --prefix="${DEST}" --mandir="${DEST}/man" --enable-shared --enable-ipv6 --with-system-ffi --with-system-expat --with-dbmliborder=bdb:gdbm:ndbm \
-  PYTHON_FOR_BUILD="_PYTHON_PROJECT_BASE=${PWD} _PYTHON_HOST_PLATFORM=${_PYTHON_HOST_PLATFORM} PYTHONPATH=${PWD}/build/lib.${_PYTHON_HOST_PLATFORM}-3.4:${PWD}/Lib:${PWD}/Lib/plat-linux2 ${PWD}/../${FOLDER}-native/python" \
+./configure --host="${HOST}" --build="$(uname -p)" --prefix="${DEST}" --mandir="${DEST}/man" --enable-shared --enable-ipv6 --with-system-ffi --with-system-expat \
+  PYTHON_FOR_BUILD="_PYTHON_PROJECT_BASE=${PWD} _PYTHON_HOST_PLATFORM=${_PYTHON_HOST_PLATFORM} PYTHONPATH=${PWD}/build/lib.${_PYTHON_HOST_PLATFORM}-3.5:${PWD}/Lib:${PWD}/Lib/plat-linux2 ${PWD}/../${FOLDER}-native/python" \
   CPPFLAGS="${CPPFLAGS} -I${DEPS}/include/ncurses" LDFLAGS="${LDFLAGS} -L${PWD}"\
   ac_cv_have_long_long_format=yes ac_cv_buggy_getaddrinfo=no ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no
 make
 make install PYTHON_FOR_BUILD="_PYTHON_PROJECT_BASE=${PWD} _PYTHON_HOST_PLATFORM=${_PYTHON_HOST_PLATFORM} PYTHONPATH=${PWD}/build ${PWD}/../${FOLDER}-native/python"
-rm -vfr "${DEST}/lib/python3.4/test"
+rm -vfr "${DEST}/lib/python3.5/test"
 popd
 }
 
@@ -172,21 +157,23 @@ _build_setuptools() {
 # http://nairobi-embedded.org/qemu_usermode.html#qemu_ld_prefix
 # export QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc"
 
-local VERSION="18.1"
+local VERSION="38.2.4"
 local FOLDER="setuptools-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
-local URL="https://pypi.python.org/packages/source/s/setuptools/${FILE}"
+local URL="https://github.com/pypa/setuptools/archive/v${VERSION}.tar.gz"
 
 _download_tgz "${FILE}" "${URL}" "${FOLDER}"
 pushd "target/${FOLDER}"
-sed -e "21i${DEST}/etc/ssl/certs/ca-certificates.crt" \
-    -e "21,26d" \
+sed -e "22i${DEST}/etc/ssl/certs/ca-certificates.crt" \
+    -e "22,29d" \
     -i setuptools/ssl_support.py
 QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc" \
-  PYTHONPATH="${DEST}/lib/python3.4/site-packages" "${DEST}/bin/python3" setup.py \
+  PYTHONPATH="${DEST}/lib/python3.5/site-packages" "${DEST}/bin/python3" bootstrap.py
+QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc" \
+  PYTHONPATH="${DEST}/lib/python3.5/site-packages" "${DEST}/bin/python3" setup.py \
   build --executable="${DEST}/bin/python3" \
   install --prefix="${DEST}" --force
-for f in {easy_install,easy_install-3.4}; do
+for f in {easy_install,easy_install-3.5}; do
   sed -i -e "1 s|^.*$|#!${DEST}/bin/python3|g" "${DEST}/bin/$f"
 done
 popd
@@ -200,18 +187,18 @@ _build_pip() {
 # http://nairobi-embedded.org/qemu_usermode.html#qemu_ld_prefix
 # export QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc"
 
-local VERSION="7.1.0"
+local VERSION="9.0.1"
 local FOLDER="pip-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
-local URL="https://pypi.python.org/packages/source/p/pip/${FILE}"
+local URL="https://github.com/pypa/pip/archive/${VERSION}.tar.gz"
 
 _download_tgz "${FILE}" "${URL}" "${FOLDER}"
 pushd "target/${FOLDER}"
 QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc" \
-  PYTHONPATH="${DEST}/lib/python3.4/site-packages" "${DEST}/bin/python3" setup.py \
+  PYTHONPATH="${DEST}/lib/python3.5/site-packages" "${DEST}/bin/python3" setup.py \
   build --executable="${DEST}/bin/python3" \
   install --prefix="${DEST}" --force
-for f in {pip,pip3,pip3.4}; do
+for f in {pip,pip3,pip3.5}; do
   sed -i -e "1 s|^.*$|#!${DEST}/bin/python3|g" "${DEST}/bin/$f"
 done
 popd
@@ -232,7 +219,6 @@ _build() {
   _build_openssl
   _build_ncurses
   _build_sqlite
-  _build_bdb
   _build_libffi
   _build_expat
   _build_python
