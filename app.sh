@@ -204,6 +204,50 @@ done
 popd
 }
 
+### netifaces ###
+_build_netifaces() {
+# setup qemu static for this one:
+# https://wiki.debian.org/QemuUserEmulation
+# apt-get install binfmt-support qemu-user-static
+# http://nairobi-embedded.org/qemu_usermode.html#qemu_ld_prefix
+# export QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc"
+
+local VERSION="0.10.6"
+local FOLDER="netifaces-${VERSION}"
+local FILE="${FOLDER}.tar.gz"
+local URL="https://pypi.python.org/packages/72/01/ba076082628901bca750bf53b322a8ff10c1d757dc29196a8e6082711c9d/netifaces-0.10.6.tar.gz#md5=1d424cb5ef52907c5ab913011122a98b"
+
+_download_tgz "${FILE}" "${URL}" "${FOLDER}"
+pushd "target/${FOLDER}"
+QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc" \
+  PYTHONPATH="${DEST}/lib/python3.5/site-packages" "${DEST}/bin/python3" setup.py \
+  build --executable="${DEST}/bin/python3" \
+  install --prefix="${DEST}" --force
+popd
+}
+
+### pycryptodome ###
+_build_pycryptodome() {
+# setup qemu static for this one:
+# https://wiki.debian.org/QemuUserEmulation
+# apt-get install binfmt-support qemu-user-static
+# http://nairobi-embedded.org/qemu_usermode.html#qemu_ld_prefix
+# export QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc"
+
+local VERSION="3.3.1"
+local FOLDER="pycryptodome-${VERSION}"
+local FILE="${FOLDER}.tar.gz"
+local URL="https://pypi.python.org/packages/d2/50/6e4f3b4a77a430639feb6e37f5514fd537f011c0c8ce698f40731d4066b1/pycryptodome-3.3.1.tar.gz#md5=d5d65fed5894ae14aefa6a08dd889e12"
+
+_download_tgz "${FILE}" "${URL}" "${FOLDER}"
+pushd "target/${FOLDER}"
+QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc" \
+  PYTHONPATH="${DEST}/lib/python3.5/site-packages" "${DEST}/bin/python3" setup.py \
+  build --executable="${DEST}/bin/python3" \
+  install --prefix="${DEST}" --force
+popd
+}
+
 ### CERTIFICATES ###
 _build_certificates() {
 # update CA certificates on a Debian/Ubuntu machine:
@@ -224,6 +268,8 @@ _build() {
   _build_python
   _build_setuptools
   _build_pip
+  _build_netifaces
+  _build_pycryptodome
   _build_certificates
   _package
 }
