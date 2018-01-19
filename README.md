@@ -1,10 +1,10 @@
-# python3 ![](https://travis-ci.org/droboports/python3.svg?branch=master)
+# python3 
 
 This is a set of scripts to package a DroboApp from scratch, i.e., download sources, unpackage, compile, install, and package in a TGZ file. The `master` branch contains the Drobo5N version, the `drobofs` branch contains the DroboFS version.
 
 ## I just want to install the DroboApp, what do I do?
 
-Check the [releases](https://github.com/droboports/python3/releases) page. If there are no releases available, then you have to compile.
+Check the [releases](https://github.com/nohandlearch/python3/releases) page. If there are no releases available, then you have to compile.
 
 ## How to compile
 
