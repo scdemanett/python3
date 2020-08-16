@@ -168,8 +168,6 @@ sed -e "22i${DEST}/etc/ssl/certs/ca-certificates.crt" \
     -e "22,29d" \
     -i setuptools/ssl_support.py
 QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc" \
-  PYTHONPATH="${DEST}/lib/python3.8/site-packages" "${DEST}/bin/python3" bootstrap.py
-QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc" \
   PYTHONPATH="${DEST}/lib/python3.8/site-packages" "${DEST}/bin/python3" setup.py \
   build --executable="${DEST}/bin/python3" \
   install --prefix="${DEST}" --force
