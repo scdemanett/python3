@@ -3,7 +3,7 @@ _build_zlib() {
 local VERSION="1.2.11"
 local FOLDER="zlib-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
-local URL="https://www.zlib.net/${FILE}"
+local URL="https://zlib.net/${FILE}"
 
 _download_tgz "${FILE}" "${URL}" "${FOLDER}"
 pushd "target/${FOLDER}"
@@ -15,10 +15,10 @@ popd
 
 ### BZIP ###
 _build_bzip() {
-local VERSION="1.0.6"
+local VERSION="1.0.8"
 local FOLDER="bzip2-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
-local URL="http://bzip.org/1.0.6/${FILE}"
+local URL="https://sourceware.org/pub/bzip2/${FILE}"
 
 _download_tgz "${FILE}" "${URL}" "${FOLDER}"
 pushd "target/${FOLDER}"
@@ -32,36 +32,34 @@ popd
 
 ### OPENSSL ###
 _build_openssl() {
-local VERSION="1.0.2n"
+local VERSION="1.1.1g"
 local FOLDER="openssl-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
 local URL="https://www.openssl.org/source/${FILE}"
 
 _download_tgz "${FILE}" "${URL}" "${FOLDER}"
-cp -vf "src/${FOLDER}-parallel-build.patch" "target/${FOLDER}/"
 pushd "target/${FOLDER}"
-patch -p1 -i "${FOLDER}-parallel-build.patch"
 ./Configure --prefix="${DEPS}" --openssldir="${DEST}/etc/ssl" \
   zlib-dynamic --with-zlib-include="${DEPS}/include" --with-zlib-lib="${DEPS}/lib" \
-  shared threads linux-armv4 -DL_ENDIAN ${CFLAGS} ${LDFLAGS} -Wa,--noexecstack -Wl,-z,noexecstack
+  shared threads linux-armv4 -DL_ENDIAN ${CFLAGS} ${LDFLAGS} \
+  -Wa,--noexecstack -Wl,-z,noexecstack
 sed -i -e "s/-O3//g" Makefile
 make
 make install_sw
-mkdir -p "${DEST}/libexec"
-cp -vfa "${DEPS}/bin/openssl" "${DEST}/libexec/"
-cp -vfaR "${DEPS}/lib"/* "${DEST}/lib/"
-rm -vfr "${DEPS}/lib"
-rm -vf "${DEST}/lib/libcrypto.a" "${DEST}/lib/libssl.a"
-sed -i -e "s|^exec_prefix=.*|exec_prefix=${DEST}|g" "${DEST}/lib/pkgconfig/openssl.pc"
+cp -vfa "${DEPS}/lib/libssl.so"* "${DEST}/lib/"
+cp -vfa "${DEPS}/lib/libcrypto.so"* "${DEST}/lib/"
+cp -vfaR "${DEPS}/lib/engines"* "${DEST}/lib/"
+cp -vfaR "${DEPS}/lib/pkgconfig" "${DEST}/lib/"
+rm -vf "${DEPS}/lib/libcrypto.a" "${DEPS}/lib/libssl.a"
 popd
 }
 
 ### NCURSES ###
 _build_ncurses() {
-local VERSION="5.9"
+local VERSION="6.2"
 local FOLDER="ncurses-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
-local URL="http://ftp.gnu.org/gnu/ncurses/${FILE}"
+local URL="https://invisible-mirror.net/archives/ncurses/${FILE}"
 
 _download_tgz "${FILE}" "${URL}" "${FOLDER}"
 pushd "target/${FOLDER}"
@@ -74,7 +72,7 @@ popd
 
 ### SQLITE ###
 _build_sqlite() {
-local VERSION="3210000"
+local VERSION="3330000"
 local FOLDER="sqlite-autoconf-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
 local URL="https://www.sqlite.org/2017/${FILE}"
@@ -89,7 +87,7 @@ popd
 
 ### LIBFFI ###
 _build_libffi() {
-local VERSION="3.2.1"
+local VERSION="3.3"
 local FOLDER="libffi-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
 local URL="ftp://sourceware.org/pub/libffi/${FILE}"
@@ -106,10 +104,10 @@ popd
 
 ### EXPAT ###
 _build_expat() {
-local VERSION="2.2.5"
+local VERSION="2.2.9"
 local FOLDER="expat-${VERSION}"
 local FILE="${FOLDER}.tar.bz2"
-local URL="https://github.com/libexpat/libexpat/releases/download/R_2_2_5/${FILE}"
+local URL="https://github.com/libexpat/libexpat/releases/download/R_2_2_9/${FILE}"
 
 _download_bz2 "${FILE}" "${URL}" "${FOLDER}"
 pushd "target/${FOLDER}"
@@ -121,7 +119,7 @@ popd
 
 ### PYTHON3 ###
 _build_python() {
-local VERSION="3.5.4"
+local VERSION="3.8.5"
 local FOLDER="Python-${VERSION}"
 local FILE="${FOLDER}.tgz"
 local URL="https://www.python.org/ftp/python/${VERSION}/${FILE}"
@@ -157,7 +155,7 @@ _build_setuptools() {
 # http://nairobi-embedded.org/qemu_usermode.html#qemu_ld_prefix
 # export QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc"
 
-local VERSION="38.2.4"
+local VERSION="49.6.0"
 local FOLDER="setuptools-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
 local URL="https://github.com/pypa/setuptools/archive/v${VERSION}.tar.gz"
@@ -187,7 +185,7 @@ _build_pip() {
 # http://nairobi-embedded.org/qemu_usermode.html#qemu_ld_prefix
 # export QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc"
 
-local VERSION="9.0.1"
+local VERSION="20.2.2"
 local FOLDER="pip-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
 local URL="https://github.com/pypa/pip/archive/${VERSION}.tar.gz"
@@ -212,10 +210,10 @@ _build_netifaces() {
 # http://nairobi-embedded.org/qemu_usermode.html#qemu_ld_prefix
 # export QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc"
 
-local VERSION="0.10.6"
+local VERSION="0.10.9"
 local FOLDER="netifaces-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
-local URL="https://pypi.python.org/packages/72/01/ba076082628901bca750bf53b322a8ff10c1d757dc29196a8e6082711c9d/netifaces-0.10.6.tar.gz#md5=1d424cb5ef52907c5ab913011122a98b"
+local URL="https://github.com/al45tair/netifaces/archive/release_0_10_9.tar.gz"
 
 _download_tgz "${FILE}" "${URL}" "${FOLDER}"
 pushd "target/${FOLDER}"
@@ -234,10 +232,10 @@ _build_pycryptodome() {
 # http://nairobi-embedded.org/qemu_usermode.html#qemu_ld_prefix
 # export QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc"
 
-local VERSION="3.3.1"
+local VERSION="3.9.8"
 local FOLDER="pycryptodome-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
-local URL="https://pypi.python.org/packages/d2/50/6e4f3b4a77a430639feb6e37f5514fd537f011c0c8ce698f40731d4066b1/pycryptodome-3.3.1.tar.gz#md5=d5d65fed5894ae14aefa6a08dd889e12"
+local URL="https://files.pythonhosted.org/packages/4c/2b/eddbfc56076fae8deccca274a5c70a9eb1e0b334da0a33f894a420d0fe93/pycryptodome-3.9.8.tar.gz"
 
 _download_tgz "${FILE}" "${URL}" "${FOLDER}"
 pushd "target/${FOLDER}"
@@ -251,7 +249,7 @@ popd
 ### CERTIFICATES ###
 _build_certificates() {
 # update CA certificates on a Debian/Ubuntu machine:
-#sudo update-ca-certificates
+# sudo update-ca-certificates
 cp -vf /etc/ssl/certs/ca-certificates.crt "${DEST}/etc/ssl/certs/"
 ln -vfs certs/ca-certificates.crt "${DEST}/etc/ssl/cert.pem"
 }
