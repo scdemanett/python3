@@ -56,15 +56,15 @@ popd
 
 ### NCURSES ###
 _build_ncurses() {
-local VERSION="6.2"
+local VERSION="5.9"
 local FOLDER="ncurses-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
 local URL="https://invisible-mirror.net/archives/ncurses/${FILE}"
 
 _download_tgz "${FILE}" "${URL}" "${FOLDER}"
-cp -vf "src/${FOLDER}-crosscompile.patch" "target/${FOLDER}/"
+# cp -vf "src/${FOLDER}-crosscompile.patch" "target/${FOLDER}/"
 pushd "target/${FOLDER}"
-patch -p1 -i "${FOLDER}-crosscompile.patch"
+# patch -p1 -i "${FOLDER}-crosscompile.patch"
 ./configure --host="${HOST}" --prefix="${DEPS}" --libdir="${DEST}/lib" --datadir="${DEST}/share" --with-shared --enable-rpath
 make
 make install
