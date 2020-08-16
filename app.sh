@@ -77,7 +77,7 @@ _build_sqlite() {
 local VERSION="3330000"
 local FOLDER="sqlite-autoconf-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
-local URL="https://www.sqlite.org/2017/${FILE}"
+local URL="https://www.sqlite.org/2020/${FILE}"
 
 _download_tgz "${FILE}" "${URL}" "${FOLDER}"
 pushd "target/${FOLDER}"
