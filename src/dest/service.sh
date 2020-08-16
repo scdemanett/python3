@@ -7,8 +7,8 @@
 
 framework_version="2.1"
 name="python3"
-version="3.4.3"
-description="Python 3.4.3"
+version="3.8.5"
+description="Python 3.8.5"
 depends=""
 webui=""
 
