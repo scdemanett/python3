@@ -173,7 +173,7 @@ QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc" \
   PYTHONPATH="${DEST}/lib/python3.8/site-packages" "${DEST}/bin/python3" setup.py \
   build --executable="${DEST}/bin/python3" \
   install --prefix="${DEST}" --force
-for f in {easy_install,easy_install-3.5}; do
+for f in {easy_install,easy_install-3.8}; do
   sed -i -e "1 s|^.*$|#!${DEST}/bin/python3|g" "${DEST}/bin/$f"
 done
 popd
