@@ -100,7 +100,7 @@ pushd "target/${FOLDER}"
 make
 make install
 mkdir -p "${DEPS}/include/"
-cp -v "${DEST}/lib/${FOLDER}/include"/* "${DEPS}/include/"
+cp -v "${DEST}/lib/${FOLDER}/include/"* "${DEPS}/include/"
 popd
 }
 
