@@ -96,11 +96,11 @@ local URL="ftp://sourceware.org/pub/libffi/${FILE}"
 
 _download_tgz "${FILE}" "${URL}" "${FOLDER}"
 pushd "target/${FOLDER}"
-./configure --host="${HOST}" --prefix="${DEPS}" --libdir="${DEST}/lib" --disable-static
+./configure --host="${HOST}" --prefix="${DEPS}" --libdir="${DEST}/lib" --includedir="${DEST}/lib/${FOLDER}/include" --disable-static
 make
 make install
 mkdir -p "${DEPS}/include/"
-cp -v "${DEST}/lib/${FOLDER}/include/"* "${DEPS}/include/"
+cp -v "${DEST}/lib/${FOLDER}/include"/* "${DEPS}/include/"
 popd
 }
 
