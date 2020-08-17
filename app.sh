@@ -121,7 +121,7 @@ popd
 
 ### PYTHON3 ###
 _build_python() {
-local VERSION="3.8.5"
+local VERSION="3.7.8"
 local FOLDER="Python-${VERSION}"
 local FILE="${FOLDER}.tgz"
 local URL="https://www.python.org/ftp/python/${VERSION}/${FILE}"
@@ -145,7 +145,7 @@ export _PYTHON_HOST_PLATFORM="linux-armv7l"
   ac_cv_have_long_long_format=yes ac_cv_buggy_getaddrinfo=no ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no
 make
 make install PYTHON_FOR_BUILD="_PYTHON_PROJECT_BASE=${PWD} _PYTHON_HOST_PLATFORM=${_PYTHON_HOST_PLATFORM} PYTHONPATH=${PWD}/build ${PWD}/../${FOLDER}-native/python"
-rm -vfr "${DEST}/lib/python3.8/test"
+rm -vfr "${DEST}/lib/python3.7/test"
 popd
 }
 
@@ -157,7 +157,7 @@ _build_setuptools() {
 # http://nairobi-embedded.org/qemu_usermode.html#qemu_ld_prefix
 # export QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc"
 
-local VERSION="38.2.4"
+local VERSION="49.6.0"
 local FOLDER="setuptools-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
 local URL="https://github.com/pypa/setuptools/archive/v${VERSION}.tar.gz"
@@ -168,12 +168,12 @@ sed -e "22i${DEST}/etc/ssl/certs/ca-certificates.crt" \
     -e "22,29d" \
     -i setuptools/ssl_support.py
 QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc" \
-  PYTHONPATH="${DEST}/lib/python3.8/site-packages" "${DEST}/bin/python3" bootstrap.py
+  PYTHONPATH="${DEST}/lib/python3.7/site-packages" "${DEST}/bin/python3" bootstrap.py
 QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc" \
-  PYTHONPATH="${DEST}/lib/python3.8/site-packages" "${DEST}/bin/python3" setup.py \
+  PYTHONPATH="${DEST}/lib/python3.7/site-packages" "${DEST}/bin/python3" setup.py \
   build --executable="${DEST}/bin/python3" \
   install --prefix="${DEST}" --force
-for f in {easy_install,easy_install-3.8}; do
+for f in {easy_install,easy_install-3.7}; do
   sed -i -e "1 s|^.*$|#!${DEST}/bin/python3|g" "${DEST}/bin/$f"
 done
 popd
@@ -195,10 +195,10 @@ local URL="https://github.com/pypa/pip/archive/${VERSION}.tar.gz"
 _download_tgz "${FILE}" "${URL}" "${FOLDER}"
 pushd "target/${FOLDER}"
 QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc" \
-  PYTHONPATH="${DEST}/lib/python3.8/site-packages" "${DEST}/bin/python3" setup.py \
+  PYTHONPATH="${DEST}/lib/python3.7/site-packages" "${DEST}/bin/python3" setup.py \
   build --executable="${DEST}/bin/python3" \
   install --prefix="${DEST}" --force
-for f in {pip,pip3,pip3.8}; do
+for f in {pip,pip3,pip3.7}; do
   sed -i -e "1 s|^.*$|#!${DEST}/bin/python3|g" "${DEST}/bin/$f"
 done
 popd
@@ -220,7 +220,7 @@ local URL="https://github.com/al45tair/netifaces/archive/release_0_10_9.tar.gz"
 _download_tgz "${FILE}" "${URL}" "${FOLDER}"
 pushd "target/${FOLDER}"
 QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc" \
-  PYTHONPATH="${DEST}/lib/python3.8/site-packages" "${DEST}/bin/python3" setup.py \
+  PYTHONPATH="${DEST}/lib/python3.7/site-packages" "${DEST}/bin/python3" setup.py \
   build --executable="${DEST}/bin/python3" \
   install --prefix="${DEST}" --force
 popd
@@ -242,7 +242,7 @@ local URL="https://files.pythonhosted.org/packages/4c/2b/eddbfc56076fae8deccca27
 _download_tgz "${FILE}" "${URL}" "${FOLDER}"
 pushd "target/${FOLDER}"
 QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc" \
-  PYTHONPATH="${DEST}/lib/python3.8/site-packages" "${DEST}/bin/python3" setup.py \
+  PYTHONPATH="${DEST}/lib/python3.7/site-packages" "${DEST}/bin/python3" setup.py \
   build --executable="${DEST}/bin/python3" \
   install --prefix="${DEST}" --force
 popd
