@@ -157,7 +157,7 @@ _build_setuptools() {
 # http://nairobi-embedded.org/qemu_usermode.html#qemu_ld_prefix
 # export QEMU_LD_PREFIX="${HOME}/xtools/toolchain/${DROBO}/${HOST}/libc"
 
-local VERSION="38.2.4"
+local VERSION="50.3.0"
 local FOLDER="setuptools-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
 local URL="https://github.com/pypa/setuptools/archive/v${VERSION}.tar.gz"
