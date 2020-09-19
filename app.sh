@@ -56,7 +56,7 @@ popd
 
 ### NCURSES ###
 _build_ncurses() {
-local VERSION="5.9"
+local VERSION="6.2"
 local FOLDER="ncurses-${VERSION}"
 local FILE="${FOLDER}.tar.gz"
 local URL="https://invisible-mirror.net/archives/ncurses/${FILE}"
